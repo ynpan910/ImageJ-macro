@@ -1,0 +1,31 @@
+macro "Batch Nuclei Counts" {
+    // Specify the directory path (update with your directory path)
+    dirPath = "XXX";
+
+    // Get the list of files in the directory
+    fileList = getFileList(dirPath);
+
+    // Loop through each file in the directory
+    for (i = 0; i < lengthOf(fileList); i++) {
+        // Build the complete file path
+        filePath = dirPath + fileList[i];
+
+        // Check if the file is an image and not a directory
+        if (File.isDirectory(filePath)) {
+            continue; // Skip directories
+        }
+
+        // Open the current image
+        open(filePath);
+
+        
+       run("8-bit");    
+      setThreshold(20,255);
+      run("Threshold", "Default B&W");
+	    run("Make Binary");
+
+	    run("Analyze Particles...", "size=0-Infinity show=Masks display summarize");
+
+	    close();
+    }
+}
